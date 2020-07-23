@@ -4,8 +4,9 @@
 </div>
 
 ## 🚀 Technologies
-Technologies that I used to develop the first page
 - React Native
+- React Navigation
+- React Navigation Stack
 - Expo icons
 - Expo
 
@@ -36,7 +37,7 @@ $ yarn start or expo start
 
 ## Explore Figure Action
 <img src="./github/screenshot_2.jpg" height="800"></img>
-
+<img src="./github/screenshot_3.jpg" height="800"></img>
 
 ## 🤔 How to contribute
 

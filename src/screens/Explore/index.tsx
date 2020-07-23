@@ -3,8 +3,26 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { getProducts } from '../../utils';
 
+interface Props {
+  id: string;
+  image: any;
+  width: number;
+  height: number;
+  other_images: any[];
+  title: string;
+  subtitle: string;
+  price: string;
+  about: string;
+}
+
 const Explore: React.FC = () => {
   const products = getProducts();
+
+  const navigation = useNavigation();
+
+  function onProductClicked(product: Props) {
+    navigation.navigate('Product', { product })
+  }
 
   const styles = StyleSheet.create({
     button: {
@@ -91,7 +109,7 @@ const Explore: React.FC = () => {
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
             {products.map((product) => {
                 return (
-                  <TouchableOpacity activeOpacity={0.7} key={product.id} style={styles.productContainer}>
+                  <TouchableOpacity onPress={() => onProductClicked(product)} activeOpacity={0.7} key={product.id} style={styles.productContainer}>
                     <Image style={styles.image} source={product.image}/> 
                     <Text style={styles.textProduct}>{product.title}</Text>
                     <Text style={styles.subText}>{product.subtitle}</Text>
