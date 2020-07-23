@@ -9,7 +9,6 @@ Technologies that I used to develop the first page
 - Expo icons
 - Expo
 
-
 ## 💻 Getting Started
 
 **Clone the project and access the folder**
@@ -34,6 +33,10 @@ $ yarn ios
 # If you are going to use smartphone 
 $ yarn start or expo start
 ```
+
+## Explore Figure Action
+<img src="./github/screenshot_2.jpg" height="800"></img>
+
 
 ## 🤔 How to contribute
 

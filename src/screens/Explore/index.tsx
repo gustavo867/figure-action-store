@@ -35,9 +35,10 @@ const Explore: React.FC = () => {
       height: 155,
       backgroundColor: '#FFFFFF',
       marginTop: 160,
-      marginLeft: 57,
+      marginLeft: 0,
       borderRadius: 18,
       opacity: 1,
+      alignContent: 'center',
     },
     subText: {
       fontSize: 11,
@@ -60,9 +61,10 @@ const Explore: React.FC = () => {
        width: 112, 
        height: 147, 
        position: 'absolute', 
-       zIndex: -1, 
+       zIndex: 2, 
        marginTop: -90,
        flexDirection: 'row', 
+       resizeMode: 'contain',
     },
   })
 
@@ -86,16 +88,25 @@ const Explore: React.FC = () => {
               <Text style={styles.text}>Others</Text>  
             </TouchableOpacity>
           </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
             {products.map((product) => {
-              return (
-                <TouchableOpacity activeOpacity={0.7} key={product.id} style={styles.productContainer}>
-                  <Image style={styles.image} source={product.image}/> 
-                  <Text style={styles.textProduct}>{product.title}</Text>
-                  <Text style={styles.subText}>{product.subtitle}</Text>
-                  <Text style={styles.priceText}>{product.price}</Text>
-                </TouchableOpacity>
-              )      
-            })}
+                return (
+                  <TouchableOpacity activeOpacity={0.7} key={product.id} style={styles.productContainer}>
+                    <Image style={styles.image} source={product.image}/> 
+                    <Text style={styles.textProduct}>{product.title}</Text>
+                    <Text style={styles.subText}>{product.subtitle}</Text>
+                    <Text style={styles.priceText}>{product.price}</Text>
+                  </TouchableOpacity>
+                )      
+              })}
+          </View>
+
+          <View style={{ width: 11, flexDirection: 'row', marginTop: 116, marginLeft: 160, }}>
+            <View style={{ width: 11, height: 11, backgroundColor: '#FFFFFF', borderRadius: 5, }}></View> 
+            <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
+            <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
+          </View>
+         
         </View>
     </View>
   );
