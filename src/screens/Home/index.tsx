@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
 
 const styles = StyleSheet.create({
   image: {
@@ -43,6 +44,7 @@ const Home: React.FC = () => {
   }
   return (
       <View style={{ backgroundColor: '#010101', flex: 1, }}>
+        <StatusBar style="light"/>
           <Text style={styles.text}>
           Figure 
           </Text>
