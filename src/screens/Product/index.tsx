@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 import { AntDesign } from '@expo/vector-icons';
 
 interface Props {
@@ -39,7 +40,6 @@ const styles = StyleSheet.create({
      marginTop: 759,  
      width: 115,
      height: 46, 
-     borderColor: '#FFF',
      borderWidth: 1,
      borderRadius: 36, 
      position: 'absolute', 
@@ -54,7 +54,8 @@ const Product: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const [isTouched, setIsTouched] = useState(false)
+  const [isTouched, setIsTouched] = useState(false);
+  const [isAddToCart, setIsAddToCart] = useState(false);
 
   const { product } = route.params
 
@@ -66,8 +67,21 @@ const Product: React.FC = () => {
     setIsTouched((prevState) => !prevState)
   }
 
+  function handleAddProductToCart() {
+    setIsAddToCart((prevState) => !prevState)
+  }
+
+  function handleAddToCart() {
+    handleAddProductToCart()
+    showMessage({
+      message: isAddToCart ? 'Added to Cart' : 'Removed from cart',
+      type: isAddToCart ? 'success' : 'danger',
+    });
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#010101' }}>
+      <FlashMessage style={{ alignItems: 'center', justifyContent: 'center' }} animationDuration={200} position='top' icon={isAddToCart ? 'danger' : 'success'}/>
 
       <View style={{ marginTop: 90, flexDirection: 'row', marginLeft: 40, justifyContent: 'space-between' }}>
         <TouchableOpacity onPress={handleNavigateBack}>
@@ -98,13 +112,17 @@ const Product: React.FC = () => {
 
           <View style={{ width: 190, height: 90, }}>
             <Text style={{ textAlign: 'left', fontWeight: '300', color: '#FFFFFF', fontSize: 14, lineHeight: 14, marginTop: 12, marginLeft: 29, }}>{product.about}</Text>
+            <Text style={{ textAlign: 'left', fontWeight: '300', color: '#FFFFFF', fontSize: 14, lineHeight: 14, marginTop: 12, marginLeft: 29, }}>{product.especification}</Text>
           </View>
           
             <Text style={{ fontWeight: '700', color: '#FFFFFF', fontSize: 18, lineHeight: 21, marginTop: 80, marginLeft: 29, }}>{product.price}</Text>
         </View>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={{ color: '#FFFFFF', fontSize: 14, lineHeight: 17 }}>Add to cart</Text>
+        <TouchableOpacity 
+        onPress={handleAddToCart}
+        style={[styles.button, { borderColor: isAddToCart ? '#FFFFFF' : '#BF4A45' }]}
+        >
+          <Text style={{ color: isAddToCart ? '#FFFFFF' : '#BF4A45', fontSize: 13, lineHeight: 15 }}>{isAddToCart ? 'Add to cart' : 'Remove from cart'}</Text>
         </TouchableOpacity>
     </View>
   );
