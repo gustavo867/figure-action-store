@@ -36,4 +36,13 @@ export function getProducts() {
     ];
   
     return data;
-  }
+  };
+
+export function getCategories() {
+  const categories = [
+    "Games",
+    "Animes",
+    "Others"
+  ]
+  return categories
+}

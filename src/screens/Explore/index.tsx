@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { getProducts } from '../../utils';
+import React, { useState, useEffect } from 'react';
+import { useNavigation, useRoute, useLinkProps } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getProducts, getCategories } from '../../utils';
 
 interface Props {
   id: string;
@@ -16,13 +17,61 @@ interface Props {
 }
 
 const Explore: React.FC = () => {
+  const [height, setHeight] = useState(new Animated.Value(0));
+  const [width, setWidth] = useState(new Animated.Value(200));
+
+  const [selectedCategory, setSelectedCategory] = useState('Games');
+
+  const [isAddToCart] = useState(false);
+
+  const widthValue = width
+  const heightValue = height
+
   const products = getProducts();
+  const categories = getCategories();
+
+  const route = useRoute();
+
+  const routeParams = route.params
+
+  // const { isAddToCart } = routeParams
 
   const navigation = useNavigation();
+
+  const changeCategory = (category: string) => {
+    setSelectedCategory(category);
+  }
 
   function onProductClicked(product: Props) {
     navigation.navigate('Product', { product })
   }
+  
+  function handleNavigateBack() {
+    navigation.goBack();
+  }
+
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(
+        width,
+        {
+          toValue: 400,
+          duration: 100,
+          useNativeDriver: false,
+        },
+      ),
+      Animated.timing(
+        height,
+        {
+          toValue: 600,
+          duration: 100,
+          useNativeDriver: false,
+        }
+      )    
+    ]).start()
+  },[])
+
 
   const styles = StyleSheet.create({
     button: {
@@ -31,10 +80,9 @@ const Explore: React.FC = () => {
       borderRadius: 18,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: 0.8
+      opacity: 0.8,
     },
-    text: {
-      fontWeight: '600',
+    textButton: {
       color: '#FFFFFF',
       fontSize: 14,
       lineHeight: 16,
@@ -84,28 +132,60 @@ const Explore: React.FC = () => {
        flexDirection: 'row', 
        resizeMode: 'contain',
     },
+    exploreText: {
+      fontSize: 30, 
+      lineHeight: 28, 
+      fontWeight: 'bold',
+      color: '#FFFFFF', 
+      marginTop: 60, 
+      marginLeft: 30,
+    },
+    productsContainer: {
+       backgroundColor: '#2E2F33', 
+       marginTop: 60, 
+       borderTopRightRadius: 40, 
+       borderTopLeftRadius: 40, 
+    },
   })
 
   return (
     <View style={{ flex: 1, backgroundColor: '#010101' }}>
         <View style={{ marginTop: 100, marginLeft: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Image source={require('../../images/back.png')}/>
-          <Image style={{ marginRight: 50, }} source={require('../../images/cart.png')}/>
-        </View>     
-        <Text style={{ fontSize: 30, lineHeight: 28, fontWeight: 'bold' ,color: '#FFFFFF', marginTop: 60, marginLeft: 30, }}>Explore</Text>
-        <Text style={{ fontSize: 30, lineHeight: 28, fontWeight: 'bold' ,color: '#FFFFFF', marginTop: 0, marginLeft: 30, }}>Figure Actions</Text>
-        <View style={{ backgroundColor: '#2E2F33', marginTop: 60, flex: 1, borderTopRightRadius: 40, borderTopLeftRadius: 40, }}>
+
+          <TouchableOpacity onPress={handleNavigateBack}>
+           <Image  source={require('../../images/back.png')}/>
+          </TouchableOpacity> 
+
+          <MaterialCommunityIcons 
+            style={{ marginRight: 50 }} 
+            name={ isAddToCart ? 'cart' : 'cart-outline'} 
+            size={24} 
+            color={isAddToCart ? '#7159c1' : '#FFFFFF'} 
+          />
+
+        </View>  
+
+        <Text style={styles.exploreText}>Explore</Text>
+        <Text style={[ styles.exploreText, { marginTop: 0 } ]}>Figure Actions</Text>
+
+        <Animated.View style={[styles.productsContainer, { width: widthValue, height: heightValue }]}>
+          
           <View style={{ marginTop: 22, flexDirection: 'row', justifyContent: 'space-around' }}>
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#BF4A45' }]}>
-              <Text style={styles.text}>Games</Text>  
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.text}>Animes</Text>  
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.text}>Others</Text>  
-            </TouchableOpacity>
+
+            {categories.map((category, index) => {
+              return (
+                <TouchableOpacity onPress={() => changeCategory(category)} key={index} style={[styles.button, {
+                  backgroundColor: selectedCategory === category ? '#BF4A45' : '#2E2F33',
+                }]}>
+                  <Text style={[styles.textButton, {
+                    fontWeight: selectedCategory === category ? '700' : '500',
+                  }]}>{category}</Text>
+                </TouchableOpacity>
+              )
+            })}
+
           </View>
+
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
             {products.map((product) => {
                 return (
@@ -125,7 +205,7 @@ const Explore: React.FC = () => {
             <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
           </View>
          
-        </View>
+        </Animated.View>
     </View>
   );
 }

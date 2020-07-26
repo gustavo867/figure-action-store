@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity,  } from 'react-native';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 import { AntDesign } from '@expo/vector-icons';
 
@@ -59,8 +59,8 @@ const Product: React.FC = () => {
 
   const { product } = route.params
 
-  function handleNavigateBack() {
-    navigation.goBack()
+  function handleNavigateBack(isAddToCart: boolean) {
+    navigation.navigate('Explore', { isAddToCart })
   }
 
   function handleTouchedHeart() {
@@ -84,7 +84,7 @@ const Product: React.FC = () => {
       <FlashMessage style={{ alignItems: 'center', justifyContent: 'center' }} animationDuration={200} position='top' icon={isAddToCart ? 'danger' : 'success'}/>
 
       <View style={{ marginTop: 90, flexDirection: 'row', marginLeft: 40, justifyContent: 'space-between' }}>
-        <TouchableOpacity onPress={handleNavigateBack}>
+        <TouchableOpacity onPress={() => handleNavigateBack(isAddToCart)}>
           <Image source={require('../../images/back.png')}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleTouchedHeart} style={{ marginRight: 50, }}>
@@ -122,7 +122,7 @@ const Product: React.FC = () => {
         onPress={handleAddToCart}
         style={[styles.button, { borderColor: isAddToCart ? '#FFFFFF' : '#BF4A45' }]}
         >
-          <Text style={{ color: isAddToCart ? '#FFFFFF' : '#BF4A45', fontSize: 13, lineHeight: 15 }}>{isAddToCart ? 'Add to cart' : 'Remove from cart'}</Text>
+          <Text style={{ color: isAddToCart ? '#FFFFFF' : '#BF4A45', fontSize: isAddToCart ? 14 : 11, lineHeight: 15 }}>{isAddToCart ? 'Add to cart' : 'Remove from cart'}</Text>
         </TouchableOpacity>
     </View>
   );
