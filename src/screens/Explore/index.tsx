@@ -22,7 +22,7 @@ const Explore: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const [isAddToCart] = useState(true);
+  // const [isAddToCart] = useState(true);
 
   const widthValue = width
   const heightValue = height
@@ -34,7 +34,7 @@ const Explore: React.FC = () => {
 
   const routeParams = route.params
 
-  // const { isAddToCart } = routeParams
+  let isAddToCart = routeParams
 
   const navigation = useNavigation();
 
@@ -48,10 +48,6 @@ const Explore: React.FC = () => {
   
   function handleNavigateBack() {
     navigation.goBack();
-  }
-
-  function handleTest() {
-    navigation.navigate('Test')
   }
 
   useEffect(() => {
@@ -155,7 +151,7 @@ const Explore: React.FC = () => {
       onPress={() => onProductClicked(product)} 
       activeOpacity={0.7} 
       key={product.id} 
-      style={[styles.productContainer, { marginLeft: product.id == '2' ? 39 : 36 }]}
+      style={[styles.productContainer, { marginLeft: product.id == '2' ? 39 : 36, marginRight: product.id === '3' ? 36 : 0 }]}
       >
         <Image style={styles.image} source={product.image}/> 
         <Text style={styles.textProduct}>{product.title}</Text>
@@ -173,7 +169,7 @@ const Explore: React.FC = () => {
            <Image  source={require('../../images/back.png')}/>
           </TouchableOpacity> 
 
-          <TouchableOpacity onPress={handleTest}>
+          <TouchableOpacity>
             <MaterialCommunityIcons 
               style={{ marginRight: 50 }} 
               name={ isAddToCart ? 'cart' : 'cart-outline'} 
@@ -206,6 +202,7 @@ const Explore: React.FC = () => {
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}> 
             <FlatList
+              showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={products.filter(product => {
                 return (                    
@@ -215,11 +212,11 @@ const Explore: React.FC = () => {
               keyExtractor={(item)=> String(item.id)} 
               renderItem={({item}) => ProductItem(item)}
             />
-        
           </View>
                  
           <View style={{ width: 11, flexDirection: 'row', marginTop: 116, marginLeft: 160, }}>
             <View style={{ width: 11, height: 11, backgroundColor: '#FFFFFF', borderRadius: 5, }}></View> 
+            <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
             <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
             <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
           </View>

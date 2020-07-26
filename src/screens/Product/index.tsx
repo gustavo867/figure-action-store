@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Text, Image, StyleSheet, TouchableOpacity,  } from 'react-native';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     height: 759,
     position: 'absolute',
     zIndex: -1,
+    resizeMode: 'contain',
   },
   textContainer: {
     position: 'absolute',
@@ -59,10 +60,6 @@ const Product: React.FC = () => {
 
   const { product } = route.params
 
-  function handleNavigateBack(isAddToCart: boolean) {
-    navigation.navigate('Explore', { isAddToCart })
-  }
-
   function handleTouchedHeart() {
     setIsTouched((prevState) => !prevState)
   }
@@ -72,16 +69,20 @@ const Product: React.FC = () => {
   }
 
   function handleAddToCart() {
-    handleAddProductToCart()
+    handleAddProductToCart();
     showMessage({
-      message: isAddToCart ? 'Added to Cart' : 'Removed from cart',
+      message: isAddToCart ? product.title + ' added to cart' : product.title + ' Removed from cart',
       type: isAddToCart ? 'success' : 'danger',
     });
   }
 
+  function handleNavigateBack(isAddToCart: boolean) {
+    navigation.navigate('Explore', { isAddToCart })
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#010101' }}>
-      <FlashMessage style={{ alignItems: 'center', justifyContent: 'center' }} animationDuration={200} position='top' icon={isAddToCart ? 'danger' : 'success'}/>
+       <FlashMessage style={{ alignItems: 'center', justifyContent: 'center' }} animationDuration={200} position='top' icon={isAddToCart ? 'danger' : 'success'}/>
 
       <View style={{ marginTop: 90, flexDirection: 'row', marginLeft: 40, justifyContent: 'space-between' }}>
         <TouchableOpacity onPress={() => handleNavigateBack(isAddToCart)}>
@@ -104,7 +105,7 @@ const Product: React.FC = () => {
           })}
       </View>
 
-        <Image source={product.image} style={styles.image}/>  
+        <Image source={product.image} style={[styles.image, { marginLeft: product.id === '3' ? -80 : 20, marginTop: product.id === '3' ? 100 : 200  }]}/>  
 
         <View style={styles.textContainer}>
           <Text style={{ fontWeight: '700', color: '#FFFFFF', fontSize: 18, lineHeight: 21, marginTop: 50, marginLeft: 29, }}>About</Text>
@@ -115,7 +116,13 @@ const Product: React.FC = () => {
             <Text style={{ textAlign: 'left', fontWeight: '300', color: '#FFFFFF', fontSize: 14, lineHeight: 14, marginTop: 12, marginLeft: 29, }}>{product.especification}</Text>
           </View>
           
-            <Text style={{ fontWeight: '700', color: '#FFFFFF', fontSize: 18, lineHeight: 21, marginTop: 80, marginLeft: 29, }}>{product.price}</Text>
+            <Text style={{ 
+              fontWeight: '700', 
+              color: '#FFFFFF', 
+              fontSize: 18, 
+              lineHeight: 21, 
+              marginTop: product.id === '3' ? 100 : 80, 
+              marginLeft: 29, }}>{product.price}</Text>
         </View>
 
         <TouchableOpacity 
