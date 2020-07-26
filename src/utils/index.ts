@@ -19,6 +19,7 @@ export function getProducts() {
         about:
           'Naked Snake é um dos personagens mais misteriosos e controversos já criados em uma história de video game. E se você jogou Metal Gear Solid 3: Snake Eater, deve ter percebido isso.',
         especification: 'Altura: 17cm',
+        category: 'Animes',
       },
       {
         id: '2',
@@ -32,6 +33,7 @@ export function getProducts() {
         about:
           'Kratos é um personagem de jogos eletrônicos da franquia God of War, da Santa Monica Studio, que é baseado nas mitologias grega e nórdica.',
         especification: 'Altura: 17cm',
+        category: 'Games',
       },
     ];
   
@@ -40,6 +42,7 @@ export function getProducts() {
 
 export function getCategories() {
   const categories = [
+    "All",
     "Games",
     "Animes",
     "Others"

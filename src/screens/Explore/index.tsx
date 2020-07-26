@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute, useLinkProps } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getProducts, getCategories } from '../../utils';
 
@@ -20,9 +20,9 @@ const Explore: React.FC = () => {
   const [height, setHeight] = useState(new Animated.Value(0));
   const [width, setWidth] = useState(new Animated.Value(200));
 
-  const [selectedCategory, setSelectedCategory] = useState('Games');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const [isAddToCart] = useState(false);
+  const [isAddToCart] = useState(true);
 
   const widthValue = width
   const heightValue = height
@@ -50,6 +50,9 @@ const Explore: React.FC = () => {
     navigation.goBack();
   }
 
+  function handleTest() {
+    navigation.navigate('Test')
+  }
 
   useEffect(() => {
     Animated.parallel([
@@ -71,7 +74,6 @@ const Explore: React.FC = () => {
       )    
     ]).start()
   },[])
-
 
   const styles = StyleSheet.create({
     button: {
@@ -101,7 +103,6 @@ const Explore: React.FC = () => {
       height: 155,
       backgroundColor: '#FFFFFF',
       marginTop: 160,
-      marginLeft: 0,
       borderRadius: 18,
       opacity: 1,
       alignContent: 'center',
@@ -148,6 +149,22 @@ const Explore: React.FC = () => {
     },
   })
 
+  const ProductItem = (product: Props) => {
+    return (     
+      <TouchableOpacity 
+      onPress={() => onProductClicked(product)} 
+      activeOpacity={0.7} 
+      key={product.id} 
+      style={[styles.productContainer, { marginLeft: product.id == '2' ? 39 : 36 }]}
+      >
+        <Image style={styles.image} source={product.image}/> 
+        <Text style={styles.textProduct}>{product.title}</Text>
+        <Text style={styles.subText}>{product.subtitle}</Text>
+        <Text style={styles.priceText}>{product.price}</Text>
+      </TouchableOpacity>
+    )
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: '#010101' }}>
         <View style={{ marginTop: 100, marginLeft: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -156,12 +173,15 @@ const Explore: React.FC = () => {
            <Image  source={require('../../images/back.png')}/>
           </TouchableOpacity> 
 
-          <MaterialCommunityIcons 
-            style={{ marginRight: 50 }} 
-            name={ isAddToCart ? 'cart' : 'cart-outline'} 
-            size={24} 
-            color={isAddToCart ? '#7159c1' : '#FFFFFF'} 
-          />
+          <TouchableOpacity onPress={handleTest}>
+            <MaterialCommunityIcons 
+              style={{ marginRight: 50 }} 
+              name={ isAddToCart ? 'cart' : 'cart-outline'} 
+              size={24} 
+              color={isAddToCart ? '#7159c1' : '#FFFFFF'} 
+            />
+          </TouchableOpacity>
+         
 
         </View>  
 
@@ -169,9 +189,8 @@ const Explore: React.FC = () => {
         <Text style={[ styles.exploreText, { marginTop: 0 } ]}>Figure Actions</Text>
 
         <Animated.View style={[styles.productsContainer, { width: widthValue, height: heightValue }]}>
-          
+        
           <View style={{ marginTop: 22, flexDirection: 'row', justifyContent: 'space-around' }}>
-
             {categories.map((category, index) => {
               return (
                 <TouchableOpacity onPress={() => changeCategory(category)} key={index} style={[styles.button, {
@@ -183,22 +202,22 @@ const Explore: React.FC = () => {
                 </TouchableOpacity>
               )
             })}
-
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-            {products.map((product) => {
-                return (
-                  <TouchableOpacity onPress={() => onProductClicked(product)} activeOpacity={0.7} key={product.id} style={styles.productContainer}>
-                    <Image style={styles.image} source={product.image}/> 
-                    <Text style={styles.textProduct}>{product.title}</Text>
-                    <Text style={styles.subText}>{product.subtitle}</Text>
-                    <Text style={styles.priceText}>{product.price}</Text>
-                  </TouchableOpacity>
-                )      
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}> 
+            <FlatList
+              horizontal={true}
+              data={products.filter(product => {
+                return (                    
+                     product.category.includes(selectedCategory) || selectedCategory === "All"                   
+                  )
               })}
+              keyExtractor={(item)=> String(item.id)} 
+              renderItem={({item}) => ProductItem(item)}
+            />
+        
           </View>
-
+                 
           <View style={{ width: 11, flexDirection: 'row', marginTop: 116, marginLeft: 160, }}>
             <View style={{ width: 11, height: 11, backgroundColor: '#FFFFFF', borderRadius: 5, }}></View> 
             <View style={{ width: 9, height: 9, backgroundColor: '#FFFFFF', borderRadius: 4, marginLeft: 14, }}></View>  
