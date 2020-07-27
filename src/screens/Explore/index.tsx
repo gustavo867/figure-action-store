@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation, useRoute, useLinkProps } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, FlatList } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, FlatList, SafeAreaView, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getProducts, getCategories } from '../../utils';
+
+
+const { height, width } = Dimensions.get('window');
 
 interface Props {
   id: string;
@@ -17,15 +20,12 @@ interface Props {
 }
 
 const Explore: React.FC = () => {
-  const [height, setHeight] = useState(new Animated.Value(0));
-  const [width, setWidth] = useState(new Animated.Value(200));
+  const [heightValue, setHeightValue] = useState(new Animated.Value(0));
+  const [widthValue, setWidthValue] = useState(new Animated.Value(200));
 
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   // const [isAddToCart] = useState(true);
-
-  const widthValue = width
-  const heightValue = height
 
   const products = getProducts();
   const categories = getCategories();
@@ -50,20 +50,24 @@ const Explore: React.FC = () => {
     navigation.goBack();
   }
 
+  function handleNavigateCart() {
+    navigation.navigate('Test')
+  }
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(
-        width,
+        widthValue,
         {
-          toValue: 400,
+          toValue: width,
           duration: 100,
           useNativeDriver: false,
         },
       ),
       Animated.timing(
-        height,
+        heightValue,
         {
-          toValue: 600,
+          toValue: height,
           duration: 100,
           useNativeDriver: false,
         }
@@ -162,18 +166,18 @@ const Explore: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#010101' }}>
-        <View style={{ marginTop: 100, marginLeft: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#010101', }}>
+        <View style={{ paddingTop: 20, marginTop: 30, marginLeft: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
 
           <TouchableOpacity onPress={handleNavigateBack}>
-           <Image  source={require('../../images/back.png')}/>
+           <Image source={require('../../images/back.png')}/>
           </TouchableOpacity> 
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleNavigateCart}>
             <MaterialCommunityIcons 
               style={{ marginRight: 50 }} 
               name={ isAddToCart ? 'cart' : 'cart-outline'} 
-              size={24} 
+              size={20} 
               color={isAddToCart ? '#7159c1' : '#FFFFFF'} 
             />
           </TouchableOpacity>
@@ -222,7 +226,7 @@ const Explore: React.FC = () => {
           </View>
          
         </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 }
 
