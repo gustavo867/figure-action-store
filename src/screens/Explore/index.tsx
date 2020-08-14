@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, FlatList, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, FlatList, SafeAreaView, Dimensions, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getProducts, getCategories } from '../../utils';
-
+import { RectButton } from 'react-native-gesture-handler';
 
 const { height, width } = Dimensions.get('window');
 
@@ -77,12 +77,11 @@ const Explore: React.FC = () => {
 
   const styles = StyleSheet.create({
     button: {
-      width: 71,
-      height: 24,
-      borderRadius: 18,
+      width: 50,
+      height: 20,
+      borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: 0.8,
     },
     textButton: {
       color: '#FFFFFF',
@@ -104,7 +103,6 @@ const Explore: React.FC = () => {
       backgroundColor: '#FFFFFF',
       marginTop: 160,
       borderRadius: 18,
-      opacity: 1,
       alignContent: 'center',
     },
     subText: {
@@ -151,17 +149,17 @@ const Explore: React.FC = () => {
 
   const ProductItem = (product: Props) => {
     return (     
-      <TouchableOpacity 
-      onPress={() => onProductClicked(product)} 
-      activeOpacity={0.7} 
-      key={product.id} 
-      style={[styles.productContainer, { marginLeft: product.id == '2' ? 39 : 36, marginRight: product.id === '3' ? 36 : 0 }]}
-      >
-        <Image style={styles.image} source={product.image}/> 
-        <Text style={styles.textProduct}>{product.title}</Text>
-        <Text style={styles.subText}>{product.subtitle}</Text>
-        <Text style={styles.priceText}>{product.price}</Text>
-      </TouchableOpacity>
+        <RectButton 
+          onPress={() => onProductClicked(product)} 
+          activeOpacity={0.7} 
+          key={product.id} 
+          style={[styles.productContainer, { marginLeft: product.id == '2' ? 39 : 36, marginTop: 150}]}
+        >
+          <Image style={styles.image} source={product.image}/> 
+          <Text style={styles.textProduct}>{product.title}</Text>
+          <Text style={styles.subText}>{product.subtitle}</Text>
+          <Text style={styles.priceText}>{product.price}</Text>
+        </RectButton> 
     )
   };
 
@@ -182,7 +180,6 @@ const Explore: React.FC = () => {
             />
           </TouchableOpacity>
          
-
         </View>  
 
         <Text style={styles.exploreText}>Explore</Text>
@@ -204,19 +201,22 @@ const Explore: React.FC = () => {
             })}
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}> 
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              data={products.filter(product => {
-                return (                    
-                     product.category.includes(selectedCategory) || selectedCategory === "All"                   
-                  )
-              })}
-              keyExtractor={(item)=> String(item.id)} 
-              renderItem={({item}) => ProductItem(item)}
-            />
-          </View>
+          <ScrollView> 
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                alwaysBounceVertical={false}
+                data={products.filter(product => {
+                  return (                    
+                    product.category.includes(selectedCategory) || selectedCategory === "All"                   
+                    )
+                  })}
+                keyExtractor={(item)=> String(item.id)} 
+                renderItem={({item}) => <ProductItem {...item}/>}
+                horizontal={true}
+              />
+            </View>
+          </ScrollView>
                  
           <View style={{ width: 11, flexDirection: 'row', marginTop: 116, marginLeft: 160, }}>
             <View style={{ width: 11, height: 11, backgroundColor: '#FFFFFF', borderRadius: 5, }}></View> 

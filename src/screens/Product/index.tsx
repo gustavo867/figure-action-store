@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import { View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions, StyleSheet } from 'react-native';
+import FlashMessage, { showMessage,  } from "react-native-flash-message";
 import { AntDesign } from '@expo/vector-icons';
 
-const { height, width } = Dimensions.get('window');
-
 interface Props {
-    product: Object
     id: string;
     image: any;
     width: number;
@@ -17,7 +14,13 @@ interface Props {
     subtitle: string;
     price: string;
     about: string;
+    especification: string;
 }
+interface Product {
+  product: Props
+}
+
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   image: {
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2E2F33',
   },
   button: {
-     marginTop: height,  
+     marginTop: height * 0.89,  
      width: 115,
      height: 46, 
      borderWidth: 1,
@@ -67,7 +70,7 @@ const Product: React.FC = () => {
   const [isTouched, setIsTouched] = useState(false);
   const [isAddToCart, setIsAddToCart] = useState(true);
 
-  const { product } = route.params
+  const { product } = route.params as Product
 
   function handleTouchedHeart() {
     setIsTouched((prevState) => !prevState)
@@ -108,7 +111,7 @@ const Product: React.FC = () => {
         {product.other_images.map((item: any[], index: number) => {
             return (
               <TouchableOpacity activeOpacity={0.7} key={index} style={{ width: 70, height: 70, borderRadius: 25, backgroundColor: '#FFF', marginTop: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Image style={{ width: 50, height: 50, }} source={item}/>
+                <Image resizeMode="contain" style={{ width: 50, height: 50, }} source={item}/>
               </TouchableOpacity>
             )
           })}
@@ -120,17 +123,18 @@ const Product: React.FC = () => {
           marginRight: 300,
           width: product.width - width / 3,
           height: product.height - height / 3,  
-          }]}/>  
+          resizeMode: 'contain',
+          }]}
+        />  
 
         <View style={styles.textContainer}>
-          <Text style={{ fontWeight: '700', color: '#FFFFFF', fontSize: 18, lineHeight: 21, marginTop: height  / 7, marginLeft: 29, }}>About</Text>
+          <Text style={{ fontWeight: '700', color: '#FFFFFF', fontSize: 18, lineHeight: 21, marginTop: height * 0.04, marginLeft: 29, }}>About</Text>
           <Text style={{ fontWeight: '500', color: '#FFFFFF', fontSize: 14, lineHeight: 16, marginTop: 12, marginLeft: 29, }}>{product.subtitle}</Text>
 
-          <View style={{ width: width / 2, height: height / 2, }}>
+          <View style={{ width: width / 2, height: height }}>
             <Text style={styles.aboutText}>{product.about}</Text>
             <Text style={styles.aboutText}>{product.especification}</Text>
 
-            
             <Text style={{ 
               fontWeight: '700', 
               color: '#FFFFFF', 
